@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import kr.hhplus.be.server.point.User;
+import kr.hhplus.be.server.user.entity.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -14,33 +14,33 @@ import java.util.Date;
 public class PointController {
 
     @Operation(
-            summary = "포인트 충전",
-            requestBody = @RequestBody(
-                    description = "충전 금액",
-                    required = true,
-                    content = @Content(schema = @Schema(type = "integer", example = "1000"))
-            )
+        summary = "포인트 충전",
+        requestBody = @RequestBody(
+            description = "충전 금액",
+            required = true,
+            content = @Content(schema = @Schema(type = "integer", example = "1000"))
+        )
     )
     @PatchMapping("{id}/charge")
     public User charge(
-            @Parameter(description = "충전할 회원 id") @PathVariable long id,
-            @RequestBody long amount
+        @Parameter(description = "충전할 회원 id") @PathVariable long id,
+        @RequestBody long amount
     ) {
         return new User(id, amount, null, new Date());
     }
 
     @Operation(
-            summary = "포인트 사용",
-            requestBody = @RequestBody(
-                    description = "사용 금액",
-                    required = true,
-                    content = @Content(schema = @Schema(type = "integer", example = "500"))
-            )
+        summary = "포인트 사용",
+        requestBody = @RequestBody(
+            description = "사용 금액",
+            required = true,
+            content = @Content(schema = @Schema(type = "integer", example = "500"))
+        )
     )
     @PatchMapping("{id}/use")
     public User use(
-            @Parameter(description = "사용할 회원 id") @PathVariable long id,
-            @RequestBody long amount
+        @Parameter(description = "사용할 회원 id") @PathVariable long id,
+        @RequestBody long amount
     ) {
         return new User(id, amount, null, new Date());
     }
