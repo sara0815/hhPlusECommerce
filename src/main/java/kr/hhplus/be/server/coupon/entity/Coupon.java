@@ -1,22 +1,23 @@
 package kr.hhplus.be.server.coupon.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class Coupon {
     @Schema(description = "쿠폰 id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
     @NotNull
@@ -44,14 +45,20 @@ public class Coupon {
     @Schema(description = "생성일시")
     Date createAt;
 
-    public Coupon(long id, long discountRate, long totalCount, long issuedCount, Date issueStartDatetime, Date updateAt, Date createAt) {
-        this.id = id;
+    public Coupon(long discountRate, long totalCount, long issuedCount, Date issueStartDatetime, Date updateAt, Date createAt) {
         this.discountRate = discountRate;
         this.totalCount = totalCount;
         this.issuedCount = issuedCount;
         this.issueStartDatetime = issueStartDatetime;
         this.updateAt = updateAt;
         this.createAt = createAt;
+    }
+
+    public Coupon(long discountRate, long totalCount, long issuedCount, Date issueStartDatetime) {
+        this.discountRate = discountRate;
+        this.totalCount = totalCount;
+        this.issuedCount = issuedCount;
+        this.issueStartDatetime = issueStartDatetime;
     }
 
     @PrePersist

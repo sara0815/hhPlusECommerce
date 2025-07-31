@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.order.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +13,12 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Payment {
     @NotNull
     @Schema(description = "결제 id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     @NotNull
     @Schema(description = "주문 id")

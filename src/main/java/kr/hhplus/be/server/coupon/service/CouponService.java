@@ -3,13 +3,14 @@ package kr.hhplus.be.server.coupon.service;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.coupon.entity.Coupon;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
-import kr.hhplus.be.server.coupon.entity.UserCouponResponse;
+import kr.hhplus.be.server.coupon.dto.UserCouponResponse;
 import kr.hhplus.be.server.coupon.repository.CouponRepository;
 import kr.hhplus.be.server.coupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class CouponService {
         }
         double discountRate = 1;
         for (UserCoupon userCoupon : userCouponList) {
-            Coupon coupon = couponRepository.findById(userCoupon.getCouponId());
+            Coupon coupon = couponRepository.findById(userCoupon.getCouponId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "쿠폰을 찾을 수 없습니다."));
             discountRate *= ((100 - (double)coupon.getDiscountRate()) / 100);
         }
         discountRate = 1 - discountRate;
@@ -39,17 +41,15 @@ public class CouponService {
     }
 
     @Transactional
-    public UserCouponResponse issueCoupon(long couponId, long userId) {
-        Coupon coupon = couponRepository.findById(couponId);
+    public UserCoupon issueCoupon(long couponId, long userId) {
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "쿠폰을 찾을 수 없습니다."));;
         if (new Date().before(coupon.getIssueStartDatetime())) {
-            System.out.println("new Date" + new Date());
-            System.out.println("issue" + coupon.getIssueStartDatetime());
-            return new UserCouponResponse(false, null, "아직 발급 시작 전입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "아직 발급 시작 전입니다.");
         }
         if (coupon.getTotalCount() - coupon.getIssuedCount() > 0) {
-            UserCoupon userCoupon = userCouponRepository.save(new UserCoupon(userId, couponId));
-            return new UserCouponResponse(true, userCoupon, "발급 성공");
+            return userCouponRepository.save(new UserCoupon(userId, couponId));
         }
-        return new UserCouponResponse(false, null, "선착순 발급이 종료되었습니다.");
+        throw new IllegalStateException("선착순 발급이 종료되었습니다.");
     }
 }

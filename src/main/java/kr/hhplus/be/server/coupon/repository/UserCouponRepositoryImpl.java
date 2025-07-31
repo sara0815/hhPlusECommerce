@@ -1,4 +1,40 @@
 package kr.hhplus.be.server.coupon.repository;
 
-public class UserCouponRepositoryImpl {
+import kr.hhplus.be.server.coupon.entity.UserCoupon;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@RequiredArgsConstructor
+public class UserCouponRepositoryImpl implements UserCouponRepository {
+
+    private final UserCouponJpaRepository userCouponJpaRepository;
+
+    @Override
+    public Optional<UserCoupon> findById(long id) {
+        return userCouponJpaRepository.findById(id);
+    }
+
+    @Override
+    public List<UserCoupon> findByUserID(long userId) {
+        return userCouponJpaRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<UserCoupon> saveAll(List<UserCoupon> userCouponList) {
+        return userCouponJpaRepository.saveAll(userCouponList);
+    }
+
+    @Override
+    public UserCoupon save(UserCoupon userCoupon) {
+        return userCouponJpaRepository.save(userCoupon);
+    }
+
+    @Override
+    public List<Long> findAllByOrderId(Long orderId) {
+        return List.of();
+    }
 }

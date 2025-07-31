@@ -1,0 +1,24 @@
+package kr.hhplus.be.server.product.repository;
+
+import kr.hhplus.be.server.product.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+public interface ProductJpaRepository extends JpaRepository<Product, Long> {
+    @Query(nativeQuery = true, value= """
+            SELECT p.*
+                    FROM product p
+                    JOIN (
+                          SELECT p.id
+                          FROM product AS p
+                          JOIN order_product AS op ON p.id = op.product_id
+                          WHERE op.create_at > DATE_SUB(NOW(), INTERVAL 3 DAY)
+                          GROUP BY p.id
+                          ORDER BY SUM(op.count) DESC
+                          LIMIT 5
+                    ) AS best ON p.id = best.id
+            """)
+    List<Product> getBestProductList();
+}
