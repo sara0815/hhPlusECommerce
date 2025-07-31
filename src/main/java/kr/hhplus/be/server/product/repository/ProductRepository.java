@@ -3,10 +3,11 @@ package kr.hhplus.be.server.product.repository;
 import kr.hhplus.be.server.product.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository {
-    Product findById(long id);
+    Optional<Product> findById(long id);
     List<Product> findAll();
-    List<Product> getBestProductList(); // todo best 5 repository??
+    List<Product> getBestProductList();
     List<Product> findAllById(List<Long> idList);
 }

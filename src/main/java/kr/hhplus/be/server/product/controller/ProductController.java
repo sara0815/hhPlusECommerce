@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.product.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.product.entity.Product;
 import kr.hhplus.be.server.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ProductController {
 
     @Operation(summary = "상품 조회")
     @GetMapping("/{id}")
-    public Product getProduct(@Parameter(name="id", description = "상품 id") @PathVariable long id) {
+    public Product getProduct(@Valid @Parameter(name="id", description = "상품 id") @PathVariable long id) {
         return productService.getProduct(id);
     }
 
@@ -34,7 +35,7 @@ public class ProductController {
 
     @Operation(summary = "best top5 상품 조회", description = "3일간 top5 베스트 상품 조회")
     @GetMapping("/best")
-    public List<Product> getBestProduct(@PathVariable long id) {
+    public List<Product> getBestProduct(@Valid @PathVariable long id) {
         return productService.getBestProductList();
     }
 }
