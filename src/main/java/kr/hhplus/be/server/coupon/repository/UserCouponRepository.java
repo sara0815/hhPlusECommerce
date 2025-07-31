@@ -1,17 +1,18 @@
 package kr.hhplus.be.server.coupon.repository;
 
-import jakarta.validation.constraints.NotNull;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserCouponRepository {
-    UserCoupon findById(long id);
+    Optional<UserCoupon> findById(long id);
 
-    UserCoupon findByUserID(long userId);
+    List<UserCoupon> findByUserID(long userId);
 
     List<UserCoupon> saveAll(List<UserCoupon> userCouponList);
 
     UserCoupon save(UserCoupon userCoupon);
 
+    List<Long> findAllByOrderId(Long orderId);
 }
