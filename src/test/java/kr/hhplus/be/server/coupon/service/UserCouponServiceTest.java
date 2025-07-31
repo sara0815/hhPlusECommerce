@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class UserCouponServiceTest {
     void checkCoupon() {
         // given
         UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, 0, null, null, new Date());
-        given(userCouponRepository.findById(1L)).willReturn(userCoupon);
+        given(userCouponRepository.findById(1L)).willReturn(Optional.of(userCoupon));
         List<UserCoupon> userCouponList = new ArrayList<>();
         userCouponList.add(userCoupon);
         // when
@@ -49,7 +50,7 @@ class UserCouponServiceTest {
     void checkCouponFail() {
         // given
         UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, true, 1, new Date(), null, new Date());
-        given(userCouponRepository.findById(1L)).willReturn(userCoupon);
+        given(userCouponRepository.findById(1L)).willReturn(Optional.of(userCoupon));
         List<UserCoupon> userCouponList = new ArrayList<>();
         userCouponList.add(userCoupon);
         // when
