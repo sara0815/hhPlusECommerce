@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.point.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +13,12 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class PointHistory {
     @NotNull
     @Schema(description = "포인트 내역 id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     @NotNull
     @Schema(description = "회원 id")
@@ -46,3 +49,10 @@ public class PointHistory {
         this.createAt = new Date();
     }
 }
+// jpa랑 매핑 (DB 테이블 1:1)
+
+// domain 에는 충전 사용 로직같은게 같이 들어가는 /비즈니스에서 사용하는 데이터가 들어감
+// ex> point
+
+// dto 계층마다 이동할 때 데이터를 옮겨주는 용도 
+// 사용하면 안되는 데이터를 막아줄 수도 있음 / 진짜 사용할 데이터를 걸러주는 필터 역할
