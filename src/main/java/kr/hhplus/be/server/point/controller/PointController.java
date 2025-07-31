@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.user.entity.User;
 import kr.hhplus.be.server.point.service.PointService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class PointController {
         )
     )
     @PatchMapping("{id}/charge")
-    public User charge(@Parameter(description = "충전할 회원 id") @PathVariable long userId, @RequestBody long amount) {
+    public User charge(@Valid @Parameter(description = "충전할 회원 id") @PathVariable long userId, @RequestBody long amount) {
         return pointService.chargePoint(userId, amount);
     }
 
@@ -43,11 +44,8 @@ public class PointController {
         )
     )
     @PatchMapping("{id}/use")
-    public User use(@Parameter(description = "사용할 회원 id") @PathVariable long userId, @RequestBody long amount) {
+    public User use(@Valid @Parameter(description = "사용할 회원 id") @PathVariable long userId, @RequestBody long amount) {
         return pointService.usePoint(userId, amount);
     }
 }
-// todo 예외처리 - 고도화된 예외처리 기법
-// todo todo 삭제
-// todo 데이터 검증
-// todo 롬복 사용? 
+

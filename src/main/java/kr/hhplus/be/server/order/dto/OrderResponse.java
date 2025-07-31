@@ -1,9 +1,11 @@
-package kr.hhplus.be.server.order.entity;
+package kr.hhplus.be.server.order.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.entity.UserCoupon;
+import kr.hhplus.be.server.order.entity.Order;
+import kr.hhplus.be.server.order.entity.OrderProduct;
+import kr.hhplus.be.server.order.entity.Payment;
 import kr.hhplus.be.server.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

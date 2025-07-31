@@ -6,7 +6,9 @@ import kr.hhplus.be.server.user.entity.User;
 import kr.hhplus.be.server.point.repository.PointHistoryRepository;
 import kr.hhplus.be.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -15,24 +17,24 @@ public class PointService {
     private final PointHistoryRepository pointHistoryRepository;
 
     public User chargePoint(long userId, long amount) {
-        User user = userRepository.selectById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."));;
         if (user == null) {
-            throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다: " + userId);
+            throw new NullPointerException("해당 사용자가 존재하지 않습니다: " + userId);
         }
         user = user.chargePoint(amount);
-        user = userRepository.save(user);
+        userRepository.save(user);
         savePointHistory(userId, amount, user.getPoint(), Type.CHARGE);
         return user;
     }
 
     public User usePoint(long userId, long amount) {
-        User user = userRepository.selectById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."));;
         if (user == null) {
-            throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다: " + userId);
+            throw new NullPointerException("해당 사용자가 존재하지 않습니다: " + userId);
         }
         user = user.usePoint(amount);
-        user = userRepository.save(user);
-        savePointHistory(userId, amount, user.getPoint(), Type.CHARGE);
+        userRepository.save(user);
+        savePointHistory(userId, amount, user.getPoint(), Type.USE);
         return user;
     }
 
@@ -40,4 +42,5 @@ public class PointService {
         PointHistory pointHistory = new PointHistory(userId, amount, afterAmount, type);
         pointHistoryRepository.save(pointHistory);
     }
+
 }

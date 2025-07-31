@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class PointServiceTest {
     @Test
     void chargePoint() {
         // given
-        given(userRepository.selectById(1L)).willReturn(new User(1L, 1000, null, new Date()));
+        given(userRepository.findById(1L)).willReturn(Optional.of(new User(1L, 1000, null, new Date())));
         // when
         User result = pointService.chargePoint(1L, 1000);
         // then
@@ -46,7 +47,7 @@ class PointServiceTest {
     @Test
     void usePoint() {
         // given
-        given(userRepository.selectById(1L)).willReturn(new User(1L, 1000, null, new Date()));
+        given(userRepository.findById(1L)).willReturn(Optional.of(new User(1L, 1000, null, new Date())));
         // when
         User result = pointService.usePoint(1L, 500);
         // then

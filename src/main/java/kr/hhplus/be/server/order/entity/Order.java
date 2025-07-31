@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.order.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -11,9 +11,13 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "`order`")
 public class Order {
     @NotNull
     @Schema(description = "주문 id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     long id;
     @NotNull
     @Schema(description = "회원 id")
