@@ -2,10 +2,10 @@ package kr.hhplus.be.server.user.repository;
 
 import kr.hhplus.be.server.user.entity.User;
 
-public interface UserRepository {
-    User findById(long userId);
+import java.util.Optional;
 
-    User selectById(long id);
+public interface UserRepository {
+    Optional<User> findById(long userId);
 
     User save(User user);
 }
