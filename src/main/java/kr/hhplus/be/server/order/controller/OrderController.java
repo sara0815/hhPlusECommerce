@@ -2,6 +2,7 @@ package kr.hhplus.be.server.order.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
 import kr.hhplus.be.server.order.entity.OrderProduct;
 import kr.hhplus.be.server.order.dto.OrderRequest;
@@ -23,11 +24,11 @@ public class OrderController {
 
     @Operation(summary = "주문생성")
     @PostMapping("/")
-    public OrderResponse createOrder(@Valid @RequestBody OrderRequest orderRequest) {
+    public Long createOrder(@Valid @RequestBody OrderRequest orderRequest) {
         long userId = orderRequest.getUserId();
         List<OrderProduct> orderProductList = orderRequest.getOrderProductList();
-        List<UserCoupon> orderCouponList = orderRequest.getUserCouponlist();
-        return orderFacade.order(userId, orderProductList, orderCouponList);
+        long orderCouponId = orderRequest.getUserCouponId();
+        return orderFacade.order(userId, orderProductList, orderCouponId);
     }
 
     @Operation(summary = "주문 정보 외부 플랫폼 전송")

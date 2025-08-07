@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.coupon.service.integrationTest;
 
+import kr.hhplus.be.server.coupon.dto.UserCouponResponse;
 import kr.hhplus.be.server.coupon.entity.Coupon;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
 import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
@@ -36,18 +37,11 @@ public class CouponIntegrationTest {
 
     @Test
     public void 선착순_쿠폰_발급() {
-        try {
-            long couponId = 1L;
-            long userId = 1L;
-            UserCoupon userCoupon = couponService.issueCoupon(couponId, userId);
-            assertThat(userCoupon.getCouponId()).isEqualTo(1L);
-            assertThat(userCoupon.getUserId()).isEqualTo(1L);
-            assertThat(userCoupon.isUsed()).isEqualTo(false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
+        long couponId = 1L;
+        long userId = 1L;
+        UserCouponResponse userCoupon = couponService.issueCoupon(couponId, userId);
+        assertThat(userCoupon.getCouponId()).isEqualTo(1L);
+        assertThat(userCoupon.getUserId()).isEqualTo(1L);
+        assertThat(userCoupon.isUsed()).isEqualTo(false);
     }
 }

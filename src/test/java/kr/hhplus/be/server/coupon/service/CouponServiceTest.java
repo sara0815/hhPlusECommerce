@@ -37,14 +37,11 @@ class CouponServiceTest {
     void couponListDiscountRate() {
         // given
         given(couponRepository.findById(1L)).willReturn(Optional.of(new Coupon(1L, 10, 10, 10, new Date(), null, new Date())));
-        given(couponRepository.findById(2L)).willReturn(Optional.of(new Coupon(2L, 20, 10, 10, new Date(), null, new Date())));
-        List<UserCoupon> userCouponList = new ArrayList<>();
-        userCouponList.add(new UserCoupon(1L, 1L));
-        userCouponList.add(new UserCoupon(1L, 2L));
+        given(userCouponRepository.findById(1L)).willReturn(Optional.of(new UserCoupon(1L, 10, 1L, false, null, null, new Date())));
         // when
-        Long discountRate = couponService.couponListDiscountRate(userCouponList);
+        Long discountRate = couponService.couponDiscountRate(1L);
         // then
-        assertThat(discountRate).isEqualTo(28);
+        assertThat(discountRate).isEqualTo(10);
     }
 
     @Test
@@ -53,12 +50,15 @@ class CouponServiceTest {
         // given
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         Date now = new Date();
-        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, 0, null, null, now);
+        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, null, null, now);
         given(couponRepository.findById(1L)).willReturn(Optional.of(new Coupon(1L, 10, 10, 0, yesterday, null, new Date())));
         given(userCouponRepository.save(any(UserCoupon.class))).willReturn(userCoupon);
         // when
-        UserCoupon result = couponService.issueCoupon(1, 1);
+        UserCouponResponse result = couponService.issueCoupon(1, 1);
         // then
-        assertThat(result).isEqualTo(userCoupon);
+
+        assertThat(result.getUserId()).isEqualTo(1L);
+        assertThat(result.getCouponId()).isEqualTo(1L);
+        assertThat(result.isUsed()).isEqualTo(false);
     }
 }

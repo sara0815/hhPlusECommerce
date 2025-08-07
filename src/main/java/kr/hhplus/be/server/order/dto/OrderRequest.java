@@ -16,8 +16,8 @@ public class OrderRequest {
     @Schema(description = "주문 상품 리스트")
     private List<OrderProduct> orderProductList; // final 불변
 
-    @Schema(description = "사용 쿠폰 리스트")
-    private List<UserCoupon> userCouponlist;
+    @Schema(description = "사용 쿠폰")
+    private long userCouponId;
 
     @NotNull
     @Schema(description = "주문 회원 id")

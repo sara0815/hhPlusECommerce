@@ -8,6 +8,7 @@ import kr.hhplus.be.server.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -16,6 +17,7 @@ public class PointService {
     private final UserRepository userRepository;
     private final PointHistoryRepository pointHistoryRepository;
 
+    @Transactional
     public User chargePoint(long userId, long amount) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."));;
         if (user == null) {
@@ -27,10 +29,14 @@ public class PointService {
         return user;
     }
 
+    @Transactional
     public User usePoint(long userId, long amount) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."));;
         if (user == null) {
             throw new NullPointerException("해당 사용자가 존재하지 않습니다: " + userId);
+        }
+        if (user.getPoint() < amount) {
+            throw new IllegalStateException("잔액이 부족합니다.");
         }
         user = user.usePoint(amount);
         userRepository.save(user);

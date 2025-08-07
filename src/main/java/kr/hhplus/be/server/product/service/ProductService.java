@@ -39,15 +39,14 @@ public class ProductService {
         return productRepository.findAllById(productIdList);
     }
 
-    public boolean checkStock(List<OrderProduct> orderProductList) {
+    public void checkStock(List<OrderProduct> orderProductList) {
         for (OrderProduct orderProduct : orderProductList) {
             long productId = orderProduct.getProductId();
             Product product = getProduct(productId);
             if (product.getStock() - orderProduct.getCount() < 0) {
-                return false;
+               throw new IllegalStateException("재고가 부족합니다.");
             }
         }
-        return true;
     }
 
     public long calculateOrderProductPrice(List<OrderProduct> orderProductList) {

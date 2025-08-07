@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,9 +29,10 @@ public class UserCouponResponse {
     
     @NotNull
     @Schema(description = "사용 여부")
-    long used;
+    boolean used;
     
     @NotNull
     @Schema(description = "생성일시")
-    long createAt;
+    Date createAt;
+
 }
