@@ -30,9 +30,19 @@ public class User {
     @Schema(description = "생성일시")
     Date createAt;
 
+    @Version
+    Long version;
+
     public User(long point) {
         this.point = point;
         this.createAt = new Date();
+    }
+
+    public User(long id, long point, Date updateAt, Date createAt) {
+        this.id = id;
+        this.point = point;
+        this.updateAt = updateAt;
+        this.createAt = createAt;
     }
 
     @PrePersist
@@ -52,7 +62,7 @@ public class User {
         if (amount <= 0) {
             throw new IllegalArgumentException("0 이하 값은 사용할 수 없습니다.");
         }
-        long point = this.point - amount;
-        return new User(this.id, point, new Date(), this.createAt);
+        this.point = this.point - amount;
+        return this;
     }
 }

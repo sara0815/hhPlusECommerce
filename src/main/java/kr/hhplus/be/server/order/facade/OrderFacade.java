@@ -71,6 +71,8 @@ public class OrderFacade {
         // 주문 상품 정보 저장
         orderProductService.saveList(orderProductList);
 
+        // 재고 차감 처리
+        productService.updateStock(orderProductList);
         return order.getId();
     }
 

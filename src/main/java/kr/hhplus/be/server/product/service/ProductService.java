@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -60,4 +61,16 @@ public class ProductService {
     }
 
 
+    @Transactional
+    public void updateStock(List<OrderProduct> orderProductList) {
+        for (OrderProduct orderProduct : orderProductList) {
+            Product product = productRepository.findByIdWithLock(orderProduct.getProductId()).orElseThrow();
+            long stock = product.getStock() - orderProduct.getCount();
+            if (stock < 0) {
+                throw new IllegalStateException("재고가 부족합니다.");
+            }
+            product.setStock(stock);
+            // productRepository.save(product);
+        }
+    }
 }

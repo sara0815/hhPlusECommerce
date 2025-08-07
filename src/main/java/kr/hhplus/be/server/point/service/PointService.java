@@ -36,7 +36,7 @@ public class PointService {
             throw new NullPointerException("해당 사용자가 존재하지 않습니다: " + userId);
         }
         if (user.getPoint() < amount) {
-            throw new IllegalStateException("잔액이 부족합니다.");
+            throw new IllegalStateException("잔액이 부족합니다. 잔액 : " + user.getPoint());
         }
         user = user.usePoint(amount);
         userRepository.save(user);

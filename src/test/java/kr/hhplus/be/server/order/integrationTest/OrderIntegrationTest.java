@@ -19,6 +19,7 @@ import kr.hhplus.be.server.product.service.ProductService;
 import kr.hhplus.be.server.user.entity.User;
 import kr.hhplus.be.server.user.repository.UserJpaRepository;
 import kr.hhplus.be.server.user.userService.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class OrderIntegrationTest {
     @Rollback
     @BeforeEach
     void setUp() {
-        User user = new User(10000);
+        User user = new User(1L, 10000, null, new Date());
         userJpaRepository.save(user);
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         Coupon coupon = new Coupon(10, 100, 1, yesterday, null, yesterday);
@@ -80,6 +81,13 @@ public class OrderIntegrationTest {
         userCouponJpaRepository.save(userCoupon);
         Product product = new Product("테스트상품", 10000, 1000);
         productJpaRepository.save(product);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        userJpaRepository.deleteAll();
+        userCouponJpaRepository.deleteAll();
+        productJpaRepository.deleteAll();
     }
 
     @Test

@@ -51,7 +51,7 @@ class CouponServiceTest {
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         Date now = new Date();
         UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, null, null, now);
-        given(couponRepository.findById(1L)).willReturn(Optional.of(new Coupon(1L, 10, 10, 0, yesterday, null, new Date())));
+        given(couponRepository.findByIdWithLock(1L)).willReturn(Optional.of(new Coupon(1L, 10, 10, 0, yesterday, null, new Date())));
         given(userCouponRepository.save(any(UserCoupon.class))).willReturn(userCoupon);
         // when
         UserCouponResponse result = couponService.issueCoupon(1, 1);

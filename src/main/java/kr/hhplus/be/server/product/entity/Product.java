@@ -47,17 +47,5 @@ public class Product {
     protected void onCreate() {
         this.createAt = new Date();
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", stock=" + stock +
-                ", updateAt=" + updateAt +
-                ", createAt=" + createAt +
-                '}';
-    }
 }
 

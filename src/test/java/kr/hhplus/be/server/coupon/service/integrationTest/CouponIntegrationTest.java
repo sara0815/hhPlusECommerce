@@ -5,6 +5,7 @@ import kr.hhplus.be.server.coupon.entity.Coupon;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
 import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.service.CouponService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class CouponIntegrationTest {
         couponJpaRepository.save(coupon);
     }
 
+    @AfterEach
+    void cleanUp() {
+        couponJpaRepository.deleteAll();
+    }
+
     @Test
     public void 선착순_쿠폰_발급() {
         long couponId = 1L;
@@ -43,5 +49,7 @@ public class CouponIntegrationTest {
         assertThat(userCoupon.getCouponId()).isEqualTo(1L);
         assertThat(userCoupon.getUserId()).isEqualTo(1L);
         assertThat(userCoupon.isUsed()).isEqualTo(false);
+        Coupon coupon = couponJpaRepository.findById(couponId).orElseThrow();
+        assertThat(coupon.getIssuedCount()).isEqualTo(1L);
     }
 }

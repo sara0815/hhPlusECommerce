@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.coupon.repository;
 
+import jakarta.persistence.LockModeType;
 import kr.hhplus.be.server.coupon.entity.Coupon;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,7 +21,17 @@ public class CouponRepositoryImpl implements CouponRepository {
     }
 
     @Override
+    public Optional<Coupon> findByIdWithLock(long couponId) {
+        return couponJpaRepository.findByIdWithLock(couponId);
+    }
+
+    @Override
     public List<Coupon> findAllById(List<Long> idList) {
         return couponJpaRepository.findAllById(idList);
+    }
+
+    @Override
+    public Coupon save(Coupon coupon) {
+        return couponJpaRepository.save(coupon);
     }
 }

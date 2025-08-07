@@ -19,6 +19,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findByIdWithLock(long id) {
+        return productJpaRepository.findByIdWithLock(id);
+    }
+
+    @Override
     public List<Product> findAll() {
         return productJpaRepository.findAll();
     }
@@ -32,4 +37,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<Product> findAllById(List<Long> idList) {
         return productJpaRepository.findAllById(idList);
     }
+
+    @Override
+    public Product save(Product product) {
+        return productJpaRepository.save(product);
+    }
+
 }
