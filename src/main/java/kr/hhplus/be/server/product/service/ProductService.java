@@ -61,10 +61,12 @@ public class ProductService {
     }
 
 
+//    @DistributedLock(key="#product")
     @Transactional
     public void updateStock(List<OrderProduct> orderProductList) {
         for (OrderProduct orderProduct : orderProductList) {
-            Product product = productRepository.findByIdWithLock(orderProduct.getProductId()).orElseThrow();
+//            Product product = productRepository.findByIdWithLock(orderProduct.getProductId()).orElseThrow();
+            Product product = productRepository.findById(orderProduct.getProductId()).orElseThrow();
             long stock = product.getStock() - orderProduct.getCount();
             if (stock < 0) {
                 throw new IllegalStateException("재고가 부족합니다.");

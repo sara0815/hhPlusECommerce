@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.order.facade;
 
 import jakarta.validation.Valid;
-import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.entity.UserCoupon;
+import kr.hhplus.be.server.redis.lock.DistributedLock;
 import kr.hhplus.be.server.coupon.service.CouponService;
 import kr.hhplus.be.server.coupon.service.UserCouponService;
 import kr.hhplus.be.server.order.dto.OrderResponse;
@@ -16,7 +15,6 @@ import kr.hhplus.be.server.user.entity.User;
 import kr.hhplus.be.server.user.userService.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class OrderFacade {
     private final OrderProductService orderProductService;
     private final PaymentService paymentService;
 
-    @Transactional
+    @DistributedLock(key="#orderProductList.![productId]")
     public Long order(long userId, List<OrderProduct> orderProductList, Long userCouponId) {
         // 재고 체크
         productService.checkStock(orderProductList);
@@ -40,6 +38,9 @@ public class OrderFacade {
         if (userCouponId != null) {
             userCouponService.checkCoupon(userCouponId);
         }
+
+        // 재고 차감 처리
+        productService.updateStock(orderProductList);
 
         // 최종 금액 계산
         long totalPrice = productService.calculateOrderProductPrice(orderProductList);
@@ -71,8 +72,6 @@ public class OrderFacade {
         // 주문 상품 정보 저장
         orderProductService.saveList(orderProductList);
 
-        // 재고 차감 처리
-        productService.updateStock(orderProductList);
         return order.getId();
     }
 
