@@ -29,11 +29,13 @@ public class PointIntegrationTest {
     @Autowired
     PointHistoryRepository pointHistoryRepository;
 
+    private User user;
+
     @Transactional
     @Rollback
     @BeforeEach
     public void setUp() {
-        User user = new User(1L, 10000, null, new Date());
+        user = new User(10000);
         userJpaRepository.save(user);
     }
     @AfterEach
@@ -42,14 +44,14 @@ public class PointIntegrationTest {
     }
     @Test
     public void 포인트_충전() {
-        User result = pointService.chargePoint(1L, 10000);
+        User result = pointService.chargePoint(user.getId(), 10000);
         assertThat(result.getPoint()).isEqualTo(20000);
 //        verify(pointHistoryRepository).save();
     }
 
     @Test
     public void 포인트_사용() {
-        User result = pointService.usePoint(1L, 4000);
+        User result = pointService.usePoint(user.getId(), 4000);
         assertThat(result.getPoint()).isEqualTo(6000);
     }
 }

@@ -31,6 +31,12 @@ public class OrderController {
         return orderFacade.order(userId, orderProductList, orderCouponId);
     }
 
+//    @Operation(summary = "결제요청")
+//    @PostMapping("/payment")
+//    public Long payment(@Valid @RequestBody Long orderId) {
+//        return orderFacade.payment(orderId);
+//    }
+
     @Operation(summary = "주문 정보 외부 플랫폼 전송")
     @PostMapping("/{id}")
     public OrderResponse createOrder(@Valid @RequestParam Long orderId) {

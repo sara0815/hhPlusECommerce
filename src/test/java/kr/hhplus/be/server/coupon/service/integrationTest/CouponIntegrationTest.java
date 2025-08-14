@@ -26,13 +26,14 @@ public class CouponIntegrationTest {
     CouponService couponService;
     @Autowired
     CouponJpaRepository couponJpaRepository;
+    private Coupon coupon;
 
     @Transactional
     @Rollback
     @BeforeEach
     void setUp() {
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
-        Coupon coupon = new Coupon(10, 10, 0, yesterday);
+        coupon = new Coupon(10, 10, 0, yesterday);
         couponJpaRepository.save(coupon);
     }
 
@@ -43,11 +44,11 @@ public class CouponIntegrationTest {
 
     @Test
     public void 선착순_쿠폰_발급() {
-        long couponId = 1L;
+        long couponId = coupon.getId();
         long userId = 1L;
         UserCouponResponse userCoupon = couponService.issueCoupon(couponId, userId);
-        assertThat(userCoupon.getCouponId()).isEqualTo(1L);
-        assertThat(userCoupon.getUserId()).isEqualTo(1L);
+        assertThat(userCoupon.getCouponId()).isEqualTo(couponId);
+        assertThat(userCoupon.getUserId()).isEqualTo(userId);
         assertThat(userCoupon.isUsed()).isEqualTo(false);
         Coupon coupon = couponJpaRepository.findById(couponId).orElseThrow();
         assertThat(coupon.getIssuedCount()).isEqualTo(1L);

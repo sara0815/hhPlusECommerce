@@ -10,6 +10,7 @@ import kr.hhplus.be.server.order.dto.OrderResponse;
 import kr.hhplus.be.server.order.entity.OrderProduct;
 import kr.hhplus.be.server.order.entity.OrderStatus;
 import kr.hhplus.be.server.order.facade.OrderFacade;
+import kr.hhplus.be.server.order.repository.OrderProductJpaRepository;
 import kr.hhplus.be.server.order.service.OrderProductService;
 import kr.hhplus.be.server.order.service.OrderService;
 import kr.hhplus.be.server.point.service.PointService;
@@ -66,20 +67,25 @@ public class OrderIntegrationTest {
     OrderService orderService;
     @Autowired
     OrderProductService orderProductService;
+    @Autowired
+    OrderProductJpaRepository orderProductJpaRepository;
+
+    private User user;
+    private Product product;
 
     @Transactional
     @Rollback
     @BeforeEach
     void setUp() {
-        User user = new User(1L, 10000, null, new Date());
+        user = new User(10000);
         userJpaRepository.save(user);
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         Coupon coupon = new Coupon(10, 100, 1, yesterday, null, yesterday);
         Coupon targetCoupon = couponJpaRepository.save(coupon);
-        UserCoupon userCoupon = new UserCoupon(1L, targetCoupon.getId());
+        UserCoupon userCoupon = new UserCoupon(user.getId(), targetCoupon.getId());
         userCouponJpaRepository.save(userCoupon);
         userCouponJpaRepository.save(userCoupon);
-        Product product = new Product("테스트상품", 10000, 1000);
+        product = new Product("테스트상품", 10000, 1000);
         productJpaRepository.save(product);
     }
 
@@ -88,14 +94,15 @@ public class OrderIntegrationTest {
         userJpaRepository.deleteAll();
         userCouponJpaRepository.deleteAll();
         productJpaRepository.deleteAll();
+        orderProductJpaRepository.deleteAll();
     }
 
     @Test
     void 주문테스트() {
         List<OrderProduct> orderProductList = new ArrayList<>();
-        OrderProduct orderProduct = new OrderProduct(1L, 1L);
+        OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
-        Long result = orderFacade.order(1L, orderProductList, null);
+        Long result = orderFacade.order(user.getId(), orderProductList, null);
         OrderResponse orderInfo = orderFacade.getOrder(result);
         assertAll("주문 확인",
             () -> assertThat(result).isNotNull()
@@ -114,10 +121,10 @@ public class OrderIntegrationTest {
     @Test
     void 주문_쿠폰사용_테스트() {
         List<OrderProduct> orderProductList = new ArrayList<>();
-        OrderProduct orderProduct = new OrderProduct(1L, 1L);
+        OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
-        List<UserCoupon> userCouponList = userCouponService.getUserCouponList(1L);
-        Long result = orderFacade.order(1L, orderProductList, userCouponList.get(0).getId());
+        List<UserCoupon> userCouponList = userCouponService.getUserCouponList(user.getId());
+        Long result = orderFacade.order(user.getId(), orderProductList, userCouponList.get(0).getId());
 
         assertAll("주문 확인",
                 () -> assertThat(result).isNotNull()
@@ -136,10 +143,10 @@ public class OrderIntegrationTest {
     @Test
     void 외부_플랫폼_데이터전송() {
         List<OrderProduct> orderProductList = new ArrayList<>();
-        OrderProduct orderProduct = new OrderProduct(1L, 1L);
+        OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
-        List<UserCoupon> userCouponList = userCouponService.getUserCouponList(1L);
-        Long orderResult = orderFacade.order(1L, orderProductList, userCouponList.get(1).getId());
+        List<UserCoupon> userCouponList = userCouponService.getUserCouponList(user.getId());
+        Long orderResult = orderFacade.order(user.getId(), orderProductList, userCouponList.get(0).getId());
 
         OrderResponse result = orderFacade.getOrder(orderResult);
         assertAll("주문 데이터",
@@ -147,7 +154,7 @@ public class OrderIntegrationTest {
                 () -> assertThat(result.getPayment().getCouponDiscountPrice()).isEqualTo(1000),
                 () -> assertThat(result.getPayment().getPaymentPrice()).isEqualTo(9000),
                 () -> assertThat(result.getOrder().getStatus()).isEqualTo(OrderStatus.ORDER_COMPLETE),
-                () -> assertThat(result.getUser().getId()).isEqualTo(1L)
+                () -> assertThat(result.getUser().getId()).isEqualTo(user.getId())
         );
     }
 }

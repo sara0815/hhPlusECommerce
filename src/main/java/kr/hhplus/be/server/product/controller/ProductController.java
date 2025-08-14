@@ -35,7 +35,7 @@ public class ProductController {
 
     @Operation(summary = "best top5 상품 조회", description = "3일간 top5 베스트 상품 조회")
     @GetMapping("/best")
-    public List<Product> getBestProduct(@Valid @PathVariable long id) {
+    public List<Product> getBestProduct() {
         return productService.getBestProductList();
     }
 }
