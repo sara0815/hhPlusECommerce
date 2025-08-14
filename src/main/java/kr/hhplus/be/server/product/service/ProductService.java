@@ -1,12 +1,10 @@
 package kr.hhplus.be.server.product.service;
 
-import jakarta.validation.Valid;
 import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.entity.Payment;
 import kr.hhplus.be.server.product.entity.Product;
 import kr.hhplus.be.server.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +18,7 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
+    @Cacheable(key="#id", value="product")
     public Product getProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "상품이 존재하지 않습니다."));
@@ -29,6 +28,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+    @Cacheable(key="'BEST_PRODUCT_LIST'", value="BEST_PRODUCT_LIST")
     public List<Product> getBestProductList() {
         return productRepository.getBestProductList();
     }
