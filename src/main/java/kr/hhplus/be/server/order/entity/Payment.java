@@ -20,28 +20,28 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+
     @NotNull
     @Schema(description = "주문 id")
     long orderId;
+
     @NotNull
     @Schema(description = "할인 전 총 금액")
     long totalPrice;
-    @NotNull
+
+    @Schema(description = "사용한 발급된 쿠폰")
+    Long userCouponId;
+
     @Schema(description = "쿠폰 할인 금액")
-    long couponDiscountPrice;
+    Long couponDiscountPrice;
+
     @NotNull
     @Schema(description = "최종 결제 금액")
     long paymentPrice;
+
     @NotNull
     @Schema(description = "생성일시")
     Date createAt;
-
-    public Payment(long orderId, long totalPrice, long couponDiscountPrice, long paymentPrice) {
-        this.orderId = orderId;
-        this.totalPrice = totalPrice;
-        this.couponDiscountPrice = couponDiscountPrice;
-        this.paymentPrice = paymentPrice;
-    }
 
     @PrePersist
     protected void onCreate() {

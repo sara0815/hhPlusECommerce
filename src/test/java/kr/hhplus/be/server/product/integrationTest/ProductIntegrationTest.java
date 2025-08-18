@@ -6,6 +6,7 @@ import kr.hhplus.be.server.point.service.PointService;
 import kr.hhplus.be.server.product.entity.Product;
 import kr.hhplus.be.server.product.repository.ProductJpaRepository;
 import kr.hhplus.be.server.product.service.ProductService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class ProductIntegrationTest {
     void setUp() {
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         productJpaRepository.deleteAll();
+        orderProductJpaRepository.deleteAll();
         productJpaRepository.save(new Product("테스트상품1", 10000, 1000));
         productJpaRepository.save(new Product("테스트상품2", 10000, 1000));
         productJpaRepository.save(new Product("테스트상품3", 10000, 1000));
@@ -52,6 +54,12 @@ public class ProductIntegrationTest {
         orderProductJpaRepository.save(new OrderProduct(7L, 7L));
         orderProductJpaRepository.save(new OrderProduct(9L, 9L));
         List<OrderProduct> orderProductList = orderProductJpaRepository.findAll();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        productJpaRepository.deleteAll();
+        orderProductJpaRepository.deleteAll();
     }
 
     @Test

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.annotation.Version;
 
 import java.util.Date;
 
@@ -28,6 +29,9 @@ public class Order {
     @NotNull
     @Schema(description = "생성일시")
     Date createAt;
+
+    @Version
+    long version;
 
     public Order(long userId, OrderStatus orderStatus) {
         this.userId = userId;

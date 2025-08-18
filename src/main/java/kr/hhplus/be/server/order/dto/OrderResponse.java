@@ -37,9 +37,6 @@ public class OrderResponse {
     @Schema(description = "주문 상품 정보")
     List<OrderProduct> orderProductList;
 
-    @Schema(description = "사용한 쿠폰 정보")
-    List<Coupon> couponList;
-
     @NotNull
     @Schema(description = "주문 회원 정보")
     User user;

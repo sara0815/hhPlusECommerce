@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.given;
 
@@ -38,9 +40,7 @@ class ProductServiceTest {
         given(productRepository.findById(2L)).willReturn(Optional.of(new Product(2L, "테스트 상품2", 2000, 1000, null, new Date())));
 
         // when
-        boolean result = productService.checkStock(orderProductList);
-        // then
-        assertThat(result).isEqualTo(true);
+        assertThatCode(() -> productService.checkStock(orderProductList)).doesNotThrowAnyException();
     }
 
     @Test
@@ -53,10 +53,10 @@ class ProductServiceTest {
         given(productRepository.findById(1)).willReturn(Optional.of(new Product(1L, "테스트 상품", 1000, 1, null, new Date())));
         given(productRepository.findById(2)).willReturn(Optional.of(new Product(2L, "테스트 상품2", 2000, 1000, null, new Date())));
 
-        // when
-        boolean result = productService.checkStock(orderProductList);
         // then
-        assertThat(result).isEqualTo(false);
+        assertThatThrownBy(() -> productService.checkStock(orderProductList))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("재고가 부족합니다.");
     }
 
     @Test

@@ -16,4 +16,7 @@ public class OrderProductRepositoryImpl implements OrderProductRepository {
     public List<OrderProduct> findAll(Long orderId) {
         return List.of();
     }
+
+    @Override
+    public void deleteAll() {}
 }

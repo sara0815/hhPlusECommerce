@@ -1,9 +1,11 @@
 package kr.hhplus.be.server.coupon.service.integrationTest;
 
+import kr.hhplus.be.server.coupon.dto.UserCouponResponse;
 import kr.hhplus.be.server.coupon.entity.Coupon;
 import kr.hhplus.be.server.coupon.entity.UserCoupon;
 import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
 import kr.hhplus.be.server.coupon.service.CouponService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,30 +26,31 @@ public class CouponIntegrationTest {
     CouponService couponService;
     @Autowired
     CouponJpaRepository couponJpaRepository;
+    private Coupon coupon;
 
     @Transactional
     @Rollback
     @BeforeEach
     void setUp() {
         Date yesterday = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
-        Coupon coupon = new Coupon(10, 10, 0, yesterday);
+        coupon = new Coupon(10, 10, 0, yesterday);
         couponJpaRepository.save(coupon);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        couponJpaRepository.deleteAll();
     }
 
     @Test
     public void 선착순_쿠폰_발급() {
-        try {
-            long couponId = 1L;
-            long userId = 1L;
-            UserCoupon userCoupon = couponService.issueCoupon(couponId, userId);
-            assertThat(userCoupon.getCouponId()).isEqualTo(1L);
-            assertThat(userCoupon.getUserId()).isEqualTo(1L);
-            assertThat(userCoupon.isUsed()).isEqualTo(false);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
+        long couponId = coupon.getId();
+        long userId = 1L;
+        UserCouponResponse userCoupon = couponService.issueCoupon(couponId, userId);
+        assertThat(userCoupon.getCouponId()).isEqualTo(couponId);
+        assertThat(userCoupon.getUserId()).isEqualTo(userId);
+        assertThat(userCoupon.isUsed()).isEqualTo(false);
+        Coupon coupon = couponJpaRepository.findById(couponId).orElseThrow();
+        assertThat(coupon.getIssuedCount()).isEqualTo(1L);
     }
 }

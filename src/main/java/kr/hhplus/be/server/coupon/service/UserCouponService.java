@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
@@ -27,26 +28,29 @@ public class UserCouponService {
         return userCouponRepository.findByUserID(user.getId());
     }
 
-    public boolean checkCoupon(List<UserCoupon> userCouponList) {
-        for (UserCoupon userCoupon : userCouponList) {
-            UserCoupon target = userCouponRepository.findById(userCoupon.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "쿠폰이 존재하지 않습니다."));
-            if (target.isUsed()) {
-                return false;
-            }
+    public void checkCoupon(Long userCouponId) {
+        UserCoupon target = userCouponRepository.findById(userCouponId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "쿠폰이 존재하지 않습니다."));
+        if (target.isUsed()) {
+            throw new IllegalStateException("이미 사용된 쿠폰입니다.");
         }
-        return true;
     }
 
-    public List<UserCoupon> updateUsedInfo(List<UserCoupon> userCouponList, long orderNumber) {
-        Date now = new Date();
-        for (UserCoupon userCoupon : userCouponList) {
-            userCoupon.setUsed(true);
-            userCoupon.setUpdateAt(now);
-            userCoupon.setUsedAt(now);
-            userCoupon.setOrderNumber(orderNumber);
+    // 쿠폰 사용처리
+    @Transactional
+    public UserCoupon updateUsedInfo(Long couponId, long orderNumber) {
+        if (couponId == null) {
+            return null;
         }
-        return userCouponRepository.saveAll(userCouponList);
+        UserCoupon usedCoupon = userCouponRepository.findById(couponId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "쿠폰이 존재하지 않습니다."));
+        if (usedCoupon.isUsed()) {
+            throw new IllegalStateException("이미 사용된 쿠폰입니다.");
+        }
+        Date now = new Date();
+        usedCoupon.setUpdateAt(now);
+        usedCoupon.setUsed(true);
+        usedCoupon.setUsedAt(now);
+        return userCouponRepository.save(usedCoupon); // todo update를 해야하는지..????
     }
 
     public List<Long> getCouponIdListByOrderId(Long orderId) {

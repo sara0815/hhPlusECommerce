@@ -10,4 +10,6 @@ public interface OrderProductRepository {
 
     List<OrderProduct> findAll(Long orderId);
 
+    void deleteAll();
+
 }
