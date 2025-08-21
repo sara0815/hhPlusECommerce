@@ -14,5 +14,9 @@ public interface UserCouponRepository {
 
     UserCoupon save(UserCoupon userCoupon);
 
-    List<Long> findAllByOrderId(Long orderId);
+    List<Long> findAllByOrderId(long orderId);
+
+    List<UserCoupon> findAllByCouponID(long couponId);
+
+    long countByCouponId(long couponId);
 }

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.order.facade;
 
 import jakarta.validation.Valid;
-import kr.hhplus.be.server.redis.lock.DistributedLock;
+import kr.hhplus.be.server.common.aop.distributedLock.DistributedLock;
 import kr.hhplus.be.server.coupon.service.CouponService;
 import kr.hhplus.be.server.coupon.service.UserCouponService;
 import kr.hhplus.be.server.order.dto.OrderResponse;
@@ -71,6 +71,8 @@ public class OrderFacade {
         paymentService.save(payment);
         // 주문 상품 정보 저장
         orderProductService.saveList(orderProductList);
+
+        orderService.saveTotalCount(orderProductList);
 
         return order.getId();
     }
