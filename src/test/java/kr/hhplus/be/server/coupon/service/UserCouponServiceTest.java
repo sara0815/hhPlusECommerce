@@ -32,7 +32,7 @@ class UserCouponServiceTest {
     @DisplayName("사용 가능한 쿠폰인지 체크 성공 테스트")
     void checkCoupon() {
         // given
-        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, null, null, new Date());
+        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, 0, null, null, new Date());
         given(userCouponRepository.findById(1L)).willReturn(Optional.of(userCoupon));
         // when
         // then
@@ -43,7 +43,7 @@ class UserCouponServiceTest {
     @DisplayName("사용 가능한 쿠폰인지 체크 실패 테스트")
     void checkCouponFail() {
         // given
-        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, true, new Date(), null, new Date());
+        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, true, 1, new Date(), null, new Date());
         given(userCouponRepository.findById(1L)).willReturn(Optional.of(userCoupon));
         List<UserCoupon> userCouponList = new ArrayList<>();
         userCouponList.add(userCoupon);
@@ -58,7 +58,7 @@ class UserCouponServiceTest {
     @Test
     void updateUsedInfo() {
         // given
-        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, new Date(), null, new Date());
+        UserCoupon userCoupon = new UserCoupon(1L, 1L, 1L, false, 0, new Date(), null, new Date());
         given(userCouponRepository.findById(1L)).willReturn(Optional.of(userCoupon));
         given(userCouponRepository.save(userCoupon)).willReturn(userCoupon);
         // when

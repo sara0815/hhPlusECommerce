@@ -20,13 +20,13 @@ public class CouponController {
 
     @Operation(summary = "선착순 쿠폰 발급")
     @PostMapping("{couponId}")
-    public UserCouponResponse issueCoupon(
+    public void issueCoupon(
         @Valid
         @Parameter(name="couponId", description="발급 받을 쿠폰 ID")
         @PathVariable long couponId,
         @Parameter(description = "회원 id")
         @RequestParam long userId
     ) {
-        return couponService.issueCoupon(couponId, userId);
+        couponService.requestIssueCoupon(couponId, userId);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
@@ -29,4 +30,6 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
                     ) AS best ON p.id = best.id
             """)
     List<Product> getBestProductList();
+
+    List<Product> findAllByIdIn(Set<Long> ids);
 }

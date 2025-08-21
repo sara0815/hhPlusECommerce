@@ -31,6 +31,9 @@ public class UserCoupon {
     @Schema(description = "사용 여부")
     boolean used;
 
+    @Schema(description = "사용된 주문번호")
+    long orderId;
+
     @Schema(description = "사용일시")
     Date usedAt;
 
