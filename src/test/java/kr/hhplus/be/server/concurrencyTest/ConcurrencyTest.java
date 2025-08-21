@@ -86,7 +86,7 @@ public class ConcurrencyTest {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2, 10, SECONDS, queue);
         executor.execute(() -> {
             try {
-                couponService.issueCoupon(coupon.getId(), user1.getId());
+                couponService.requestIssueCoupon(coupon.getId(), user1.getId());
             }
             finally {
                 latch.countDown();
@@ -94,7 +94,7 @@ public class ConcurrencyTest {
         });
         executor.execute(() -> {
             try {
-                couponService.issueCoupon(coupon.getId(), user2.getId());
+                couponService.requestIssueCoupon(coupon.getId(), user2.getId());
             }
             finally {
                 latch.countDown();

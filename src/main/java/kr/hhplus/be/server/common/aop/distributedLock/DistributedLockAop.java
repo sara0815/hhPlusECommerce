@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.redis.lock;
+package kr.hhplus.be.server.common.aop.distributedLock;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static net.logstash.logback.argument.StructuredArguments.kv;
@@ -30,7 +28,7 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    @Around("@annotation(kr.hhplus.be.server.redis.lock.DistributedLock)")
+    @Around("@annotation(kr.hhplus.be.server.common.aop.distributedLock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
