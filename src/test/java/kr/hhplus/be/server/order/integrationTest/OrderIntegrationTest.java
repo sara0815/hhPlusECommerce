@@ -17,9 +17,11 @@ import kr.hhplus.be.server.point.service.PointService;
 import kr.hhplus.be.server.product.entity.Product;
 import kr.hhplus.be.server.product.repository.ProductJpaRepository;
 import kr.hhplus.be.server.product.service.ProductService;
+import kr.hhplus.be.server.redis.repository.RedisRepository;
 import kr.hhplus.be.server.user.entity.User;
 import kr.hhplus.be.server.user.repository.UserJpaRepository;
 import kr.hhplus.be.server.user.userService.UserService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -95,6 +98,7 @@ public class OrderIntegrationTest {
         userCouponJpaRepository.deleteAll();
         productJpaRepository.deleteAll();
         orderProductJpaRepository.deleteAll();
+        couponJpaRepository.deleteAll();
     }
 
     @Test

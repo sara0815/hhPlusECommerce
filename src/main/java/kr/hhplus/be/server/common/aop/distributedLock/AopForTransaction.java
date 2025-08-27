@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.redis.lock;
+package kr.hhplus.be.server.common.aop.distributedLock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
