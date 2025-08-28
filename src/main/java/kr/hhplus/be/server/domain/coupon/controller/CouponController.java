@@ -1,0 +1,28 @@
+package kr.hhplus.be.server.domain.coupon.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/coupon")
+public class CouponController {
+
+    private final CouponService couponService;
+
+    @Operation(summary = "선착순 쿠폰 발급")
+    @PostMapping("{couponId}")
+    public void issueCoupon(
+        @Valid
+        @Parameter(name="couponId", description="발급 받을 쿠폰 ID")
+        @PathVariable long couponId,
+        @Parameter(description = "회원 id")
+        @RequestParam long userId
+    ) {
+        couponService.requestIssueCoupon(couponId, userId);
+    }
+}

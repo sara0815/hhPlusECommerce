@@ -1,14 +1,15 @@
 package kr.hhplus.be.server.concurrencyTest.redisTest;
 
-import kr.hhplus.be.server.order.entity.Order;
-import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.facade.OrderFacade;
-import kr.hhplus.be.server.order.repository.OrderJpaRepository;
-import kr.hhplus.be.server.order.repository.OrderProductJpaRepository;
-import kr.hhplus.be.server.product.entity.Product;
-import kr.hhplus.be.server.product.repository.ProductJpaRepository;
-import kr.hhplus.be.server.user.entity.User;
-import kr.hhplus.be.server.user.repository.UserJpaRepository;
+import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.entity.Order;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.facade.OrderFacade;
+import kr.hhplus.be.server.domain.order.repository.OrderJpaRepository;
+import kr.hhplus.be.server.domain.order.repository.OrderProductJpaRepository;
+import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.domain.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.domain.user.entity.User;
+import kr.hhplus.be.server.domain.user.repository.UserJpaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,10 +89,10 @@ public class DistributedTest {
             executorService.submit(() -> {
                 try {
                     if (idx % 2 == 1) {
-                        orderFacade.order(userList.get(idx).getId(), orderProductList, null);
+                        orderFacade.order(new OrderRequest(orderProductList, null, userList.get(idx).getId()));
                     }
                     else {
-                        orderFacade.order(userList.get(idx).getId(), orderProductList2, null);
+                        orderFacade.order(new OrderRequest(orderProductList2, null, userList.get(idx).getId()));
                     }
                 }
                 finally {

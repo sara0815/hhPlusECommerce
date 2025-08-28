@@ -1,13 +1,10 @@
 package kr.hhplus.be.server.coupon.service.integrationTest;
 
-import kr.hhplus.be.server.coupon.dto.UserCouponResponse;
-import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.entity.UserCoupon;
-import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
-import kr.hhplus.be.server.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.coupon.entity.Coupon;
+import kr.hhplus.be.server.domain.coupon.repository.CouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;

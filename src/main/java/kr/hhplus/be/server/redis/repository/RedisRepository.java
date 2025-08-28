@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.redis.repository;
 
-import kr.hhplus.be.server.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
 
 import java.util.Set;
 

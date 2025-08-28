@@ -1,27 +1,26 @@
 package kr.hhplus.be.server.order.integrationTest;
 
-import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.entity.UserCoupon;
-import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
-import kr.hhplus.be.server.coupon.repository.UserCouponJpaRepository;
-import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.coupon.service.UserCouponService;
-import kr.hhplus.be.server.order.dto.OrderResponse;
-import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.entity.OrderStatus;
-import kr.hhplus.be.server.order.facade.OrderFacade;
-import kr.hhplus.be.server.order.repository.OrderProductJpaRepository;
-import kr.hhplus.be.server.order.service.OrderProductService;
-import kr.hhplus.be.server.order.service.OrderService;
-import kr.hhplus.be.server.point.service.PointService;
-import kr.hhplus.be.server.product.entity.Product;
-import kr.hhplus.be.server.product.repository.ProductJpaRepository;
-import kr.hhplus.be.server.product.service.ProductService;
-import kr.hhplus.be.server.redis.repository.RedisRepository;
-import kr.hhplus.be.server.user.entity.User;
-import kr.hhplus.be.server.user.repository.UserJpaRepository;
-import kr.hhplus.be.server.user.userService.UserService;
-import org.assertj.core.api.Assertions;
+import kr.hhplus.be.server.domain.coupon.entity.Coupon;
+import kr.hhplus.be.server.domain.coupon.entity.UserCoupon;
+import kr.hhplus.be.server.domain.coupon.repository.CouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.repository.UserCouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.coupon.service.UserCouponService;
+import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.dto.OrderResponse;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.entity.OrderStatus;
+import kr.hhplus.be.server.domain.order.facade.OrderFacade;
+import kr.hhplus.be.server.domain.order.repository.OrderProductJpaRepository;
+import kr.hhplus.be.server.domain.order.service.OrderProductService;
+import kr.hhplus.be.server.domain.order.service.OrderService;
+import kr.hhplus.be.server.domain.point.service.PointService;
+import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.domain.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.domain.product.service.ProductService;
+import kr.hhplus.be.server.domain.user.entity.User;
+import kr.hhplus.be.server.domain.user.repository.UserJpaRepository;
+import kr.hhplus.be.server.domain.user.userService.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +33,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -106,8 +103,10 @@ public class OrderIntegrationTest {
         List<OrderProduct> orderProductList = new ArrayList<>();
         OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
-        Long result = orderFacade.order(user.getId(), orderProductList, null);
+        OrderRequest orderRequest = new OrderRequest(orderProductList, null, user.getId());
+        Long result = orderFacade.order(orderRequest);
         OrderResponse orderInfo = orderFacade.getOrder(result);
+
         assertAll("주문 확인",
             () -> assertThat(result).isNotNull()
             // () -> verify(productService, times(1)).checkStock(any()),
@@ -128,7 +127,8 @@ public class OrderIntegrationTest {
         OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
         List<UserCoupon> userCouponList = userCouponService.getUserCouponList(user.getId());
-        Long result = orderFacade.order(user.getId(), orderProductList, userCouponList.get(0).getId());
+        OrderRequest orderRequest = new OrderRequest(orderProductList, userCouponList.get(0).getId(), user.getId());
+        Long result = orderFacade.order(orderRequest);
 
         assertAll("주문 확인",
                 () -> assertThat(result).isNotNull()
@@ -145,12 +145,13 @@ public class OrderIntegrationTest {
     }
 
     @Test
-    void 외부_플랫폼_데이터전송() {
+    void 주문정보조회() {
         List<OrderProduct> orderProductList = new ArrayList<>();
         OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
         List<UserCoupon> userCouponList = userCouponService.getUserCouponList(user.getId());
-        Long orderResult = orderFacade.order(user.getId(), orderProductList, userCouponList.get(0).getId());
+        OrderRequest orderRequest = new OrderRequest(orderProductList, userCouponList.get(0).getId(), user.getId());
+        Long orderResult = orderFacade.order(orderRequest);
 
         OrderResponse result = orderFacade.getOrder(orderResult);
         assertAll("주문 데이터",
