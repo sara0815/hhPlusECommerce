@@ -39,6 +39,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.45.1")
 	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 

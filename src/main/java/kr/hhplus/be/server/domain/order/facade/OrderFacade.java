@@ -1,19 +1,25 @@
-package kr.hhplus.be.server.order.facade;
+package kr.hhplus.be.server.domain.order.facade;
 
 import jakarta.validation.Valid;
 import kr.hhplus.be.server.common.aop.distributedLock.DistributedLock;
-import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.coupon.service.UserCouponService;
-import kr.hhplus.be.server.order.dto.OrderResponse;
-import kr.hhplus.be.server.order.entity.*;
-import kr.hhplus.be.server.order.service.OrderProductService;
-import kr.hhplus.be.server.order.service.OrderService;
-import kr.hhplus.be.server.order.service.PaymentService;
-import kr.hhplus.be.server.point.service.PointService;
-import kr.hhplus.be.server.product.service.ProductService;
-import kr.hhplus.be.server.user.entity.User;
-import kr.hhplus.be.server.user.userService.UserService;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.coupon.service.UserCouponService;
+import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.dto.OrderResponse;
+import kr.hhplus.be.server.domain.order.entity.Order;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.entity.OrderStatus;
+import kr.hhplus.be.server.domain.order.entity.Payment;
+import kr.hhplus.be.server.domain.order.event.OrderCreatedEvent;
+import kr.hhplus.be.server.domain.order.service.OrderProductService;
+import kr.hhplus.be.server.domain.order.service.OrderService;
+import kr.hhplus.be.server.domain.order.service.PaymentService;
+import kr.hhplus.be.server.domain.point.service.PointService;
+import kr.hhplus.be.server.domain.product.service.ProductService;
+import kr.hhplus.be.server.domain.user.entity.User;
+import kr.hhplus.be.server.domain.user.userService.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,8 +36,13 @@ public class OrderFacade {
     private final OrderProductService orderProductService;
     private final PaymentService paymentService;
 
-    @DistributedLock(key="#orderProductList.![productId]")
-    public Long order(long userId, List<OrderProduct> orderProductList, Long userCouponId) {
+    private final ApplicationEventPublisher eventPublisher;
+
+    @DistributedLock(key="#orderRequest.orderProductList.![productId]")
+    public Long order(OrderRequest orderRequest) {
+        long userId = orderRequest.getUserId();
+        Long userCouponId = orderRequest.getUserCouponId();
+        List<OrderProduct> orderProductList = orderRequest.getOrderProductList();
         // 재고 체크
         productService.checkStock(orderProductList);
         // 쿠폰 사용 가능 여부
@@ -73,6 +84,10 @@ public class OrderFacade {
         orderProductService.saveList(orderProductList);
 
         orderService.saveTotalCount(orderProductList);
+
+        // 데이터플랫폼 전송 함수
+        // dataflatformService.send(orderId)
+        eventPublisher.publishEvent(new OrderCreatedEvent(orderRequest));
 
         return order.getId();
     }
