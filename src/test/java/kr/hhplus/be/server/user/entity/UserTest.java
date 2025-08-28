@@ -1,13 +1,12 @@
 package kr.hhplus.be.server.user.entity;
 
+import kr.hhplus.be.server.domain.user.entity.User;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 class UserTest {
 

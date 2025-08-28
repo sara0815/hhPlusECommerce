@@ -1,11 +1,10 @@
 package kr.hhplus.be.server.product.integrationTest;
 
-import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.repository.OrderProductJpaRepository;
-import kr.hhplus.be.server.point.service.PointService;
-import kr.hhplus.be.server.product.entity.Product;
-import kr.hhplus.be.server.product.repository.ProductJpaRepository;
-import kr.hhplus.be.server.product.service.ProductService;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.repository.OrderProductJpaRepository;
+import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.domain.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.domain.product.service.ProductService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.scheduler;
 
-import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.product.service.ProductService;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
