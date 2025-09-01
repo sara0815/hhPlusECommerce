@@ -1,18 +1,18 @@
 package kr.hhplus.be.server.concurrencyTest;
 
-import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
-import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.order.entity.Order;
-import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.facade.OrderFacade;
-import kr.hhplus.be.server.order.repository.OrderJpaRepository;
-import kr.hhplus.be.server.order.repository.OrderRepository;
-import kr.hhplus.be.server.point.service.PointService;
-import kr.hhplus.be.server.product.entity.Product;
-import kr.hhplus.be.server.product.repository.ProductJpaRepository;
-import kr.hhplus.be.server.user.entity.User;
-import kr.hhplus.be.server.user.repository.UserJpaRepository;
+import kr.hhplus.be.server.domain.coupon.entity.Coupon;
+import kr.hhplus.be.server.domain.coupon.repository.CouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.entity.Order;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.facade.OrderFacade;
+import kr.hhplus.be.server.domain.order.repository.OrderJpaRepository;
+import kr.hhplus.be.server.domain.point.service.PointService;
+import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.domain.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.domain.user.entity.User;
+import kr.hhplus.be.server.domain.user.repository.UserJpaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -153,14 +153,14 @@ public class ConcurrencyTest {
         orderProductList1.add(orderProduct);
         executor.execute(() -> {
             try {
-                Long orderResult = orderFacade.order(user1.getId(), orderProductList1, null);
+                Long orderResult = orderFacade.order(new OrderRequest(orderProductList1, null, user1.getId()));
             } finally {
                 latch.countDown();
             }
         });
         executor.execute(() -> {
             try {
-                Long orderResult = orderFacade.order(user1.getId(), orderProductList1, null);
+                Long orderResult = orderFacade.order(new OrderRequest(orderProductList1, null, user1.getId()));
             } finally {
                 latch.countDown();
             }
@@ -190,14 +190,14 @@ public class ConcurrencyTest {
         orderProductList2.add(orderProduct2);
         executor.execute(() -> {
             try {
-                Long orderResult = orderFacade.order(user1.getId(), orderProductList1, null);
+                Long orderResult = orderFacade.order(new OrderRequest(orderProductList1, null, user1.getId()));
             } finally {
                 latch.countDown();
             }
         });
         executor.execute(() -> {
             try {
-                Long orderResult = orderFacade.order(user2.getId(), orderProductList2, null);
+                Long orderResult = orderFacade.order(new OrderRequest(orderProductList2, null, user2.getId()));
             } finally {
                 latch.countDown();
             }

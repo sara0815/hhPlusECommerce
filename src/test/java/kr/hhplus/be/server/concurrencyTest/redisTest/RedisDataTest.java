@@ -1,21 +1,21 @@
 package kr.hhplus.be.server.concurrencyTest.redisTest;
 
-import kr.hhplus.be.server.coupon.entity.Coupon;
-import kr.hhplus.be.server.coupon.entity.UserCoupon;
-import kr.hhplus.be.server.coupon.repository.CouponJpaRepository;
-import kr.hhplus.be.server.coupon.repository.UserCouponJpaRepository;
-import kr.hhplus.be.server.coupon.repository.UserCouponRepository;
-import kr.hhplus.be.server.coupon.service.CouponService;
-import kr.hhplus.be.server.order.dto.OrderResponse;
-import kr.hhplus.be.server.order.entity.OrderProduct;
-import kr.hhplus.be.server.order.facade.OrderFacade;
-import kr.hhplus.be.server.product.entity.Product;
-import kr.hhplus.be.server.product.repository.ProductJpaRepository;
-import kr.hhplus.be.server.product.service.ProductService;
+import kr.hhplus.be.server.domain.coupon.entity.Coupon;
+import kr.hhplus.be.server.domain.coupon.entity.UserCoupon;
+import kr.hhplus.be.server.domain.coupon.repository.CouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.repository.UserCouponJpaRepository;
+import kr.hhplus.be.server.domain.coupon.service.CouponService;
+import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.dto.OrderResponse;
+import kr.hhplus.be.server.domain.order.entity.OrderProduct;
+import kr.hhplus.be.server.domain.order.facade.OrderFacade;
+import kr.hhplus.be.server.domain.product.entity.Product;
+import kr.hhplus.be.server.domain.product.repository.ProductJpaRepository;
+import kr.hhplus.be.server.domain.product.service.ProductService;
 import kr.hhplus.be.server.redis.repository.RedisRepository;
-import kr.hhplus.be.server.user.entity.User;
-import kr.hhplus.be.server.user.repository.UserJpaRepository;
-import kr.hhplus.be.server.user.userService.UserService;
+import kr.hhplus.be.server.domain.user.entity.User;
+import kr.hhplus.be.server.domain.user.repository.UserJpaRepository;
+import kr.hhplus.be.server.domain.user.userService.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -166,7 +166,7 @@ public class RedisDataTest {
         List<OrderProduct> orderProductList = new ArrayList<>();
         OrderProduct orderProduct = new OrderProduct(product.getId(), 1L);
         orderProductList.add(orderProduct);
-        Long result = orderFacade.order(user.getId(), orderProductList, null);
+        Long result = orderFacade.order(new OrderRequest(orderProductList, null, user.getId()));
         OrderResponse orderInfo = orderFacade.getOrder(result);
 
         productService.mergeRankingScore();
