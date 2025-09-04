@@ -1,6 +1,15 @@
 package kr.hhplus.be.server.domain.order.event;
 
-import kr.hhplus.be.server.domain.order.dto.OrderRequest;
+import kr.hhplus.be.server.domain.order.entity.Order;
 
-public record OrderCreatedEvent(OrderRequest orderRequest) {
+public class OrderCreatedEvent {
+    private final Order order;
+
+    public OrderCreatedEvent(Order order) {
+        this.order = order;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
 }

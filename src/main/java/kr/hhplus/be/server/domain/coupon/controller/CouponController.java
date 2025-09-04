@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import kr.hhplus.be.server.domain.coupon.service.CouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,7 @@ public class CouponController {
         @Parameter(description = "회원 id")
         @RequestParam long userId
     ) {
-        couponService.requestIssueCoupon(couponId, userId);
+//        couponService.requestIssueCoupon(couponId, userId);
+        couponService.requestCoupon(couponId, userId);
     }
 }
