@@ -40,6 +40,8 @@ dependencies {
 	implementation("org.redisson:redisson-spring-boot-starter:3.45.1")
 	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+	implementation("org.springframework.kafka:spring-kafka")
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 
@@ -49,6 +51,7 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.springframework.kafka:spring-kafka-test")
 
 	// swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
