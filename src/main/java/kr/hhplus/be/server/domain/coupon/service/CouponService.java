@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.coupon.service;
 
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.domain.coupon.entity.Coupon;
 import kr.hhplus.be.server.domain.coupon.entity.UserCoupon;
 import kr.hhplus.be.server.domain.coupon.repository.CouponRepository;
@@ -7,6 +8,7 @@ import kr.hhplus.be.server.domain.coupon.repository.UserCouponRepository;
 import kr.hhplus.be.server.redis.repository.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,6 +21,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
     private final RedisRepository redisRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public long couponDiscountRate(Long userCouponId) { // % 단위로 반환
         if (userCouponId == null) {
@@ -79,5 +82,27 @@ public class CouponService {
                 }
             }
         });
+    }
+
+    public void requestCoupon(long couponId, long userId) {
+        int partition = (int) (couponId % 10);
+        kafkaTemplate.send("coupon", partition, String.valueOf(couponId), String.valueOf(userId));
+//        kafkaTemplate.send("coupon", String.valueOf(couponId), String.valueOf(userId));
+    }
+
+    // 파티션에 쿠폰 id
+    public void issueCoupon(long couponId, long userId) {
+        long issuedCount = userCouponRepository.countByCouponId(couponId);
+        Optional<Coupon> optionalCoupon = couponRepository.findById(couponId);
+        if (optionalCoupon.isEmpty()) {
+            return;
+        }
+        Coupon coupon = optionalCoupon.orElseThrow();
+        if (coupon.getTotalCount() >= issuedCount) {
+            UserCoupon userCoupon = new UserCoupon(userId, couponId);
+            userCouponRepository.save(userCoupon);
+            coupon.setIssuedCount(coupon.getIssuedCount() + 1);
+            couponRepository.save(coupon);
+        }
     }
 }
