@@ -20,6 +20,7 @@ import kr.hhplus.be.server.domain.user.entity.User;
 import kr.hhplus.be.server.domain.user.userService.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class OrderFacade {
     private final PaymentService paymentService;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @DistributedLock(key="#orderRequest.orderProductList.![productId]")
     public Long order(OrderRequest orderRequest) {
@@ -59,7 +61,7 @@ public class OrderFacade {
         long discountPrice = 0;
         if (userCouponId != null) {
             couponDiscountRate = couponService.couponDiscountRate(userCouponId);
-            discountPrice = (long)(totalPrice * (couponDiscountRate/100.0));
+            discountPrice = (long) (totalPrice * (couponDiscountRate / 100.0));
         }
         long paymentPrice = totalPrice - discountPrice;
 
@@ -87,8 +89,7 @@ public class OrderFacade {
 
         // 데이터플랫폼 전송 함수
         // dataflatformService.send(orderId)
-        eventPublisher.publishEvent(new OrderCreatedEvent(orderRequest));
-
+        eventPublisher.publishEvent(new OrderCreatedEvent(order));
         return order.getId();
     }
 
