@@ -36,11 +36,17 @@ docker-compose up -d
 https://dbdiagram.io/d/6874e772f413ba3508c05838
 
 ## - 시퀀스 다이어그램
-- 주문  
+- 주문
+- <img width="3840" height="3509" alt="e-commerce order sequence diagram _ Mermaid Chart-2025-07-17-124534" src="https://github.com/user-attachments/assets/69bf37a7-8829-4554-aa5e-f3650e31058c" />
+
 https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/diagrams/001f69cd-3640-4bb4-8af2-f3f569151535/version/v0.1/edit
-- 쿠폰 발급  
+- 쿠폰 발급
+- <img width="3840" height="2353" alt="e-commerce coupon sequence diagram _ Mermaid Chart-2025-07-17-124704" src="https://github.com/user-attachments/assets/d876d43e-6967-4140-9155-41690a8c0c6f" />
+
 https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/diagrams/cbe5c2d0-de1f-4f57-932c-2ae7527c4c8f/version/v0.1/edit
-- 포인트 적립  
+- 포인트 적립
+- ![Uploading e-commerce point sequence diagram _ Mermaid Chart-2025-07-17-124052.png…]()
+
 https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/diagrams/06a92a0b-8a97-4d9e-bf72-0132117f316a/version/v0.1/edit
 
 --- 
