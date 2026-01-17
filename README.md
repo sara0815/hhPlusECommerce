@@ -45,7 +45,8 @@ https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/d
 
 https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/diagrams/cbe5c2d0-de1f-4f57-932c-2ae7527c4c8f/version/v0.1/edit
 - 포인트 적립
- ![Uploading e-commerce point sequence diagram _ Mermaid Chart-2025-07-17-124052.png…]()
+
+<img width="3840" height="2940" alt="e-commerce point sequence diagram _ Mermaid Chart-2025-07-17-124052" src="https://github.com/user-attachments/assets/3e708a8d-36f7-4eb5-be40-a14dd341c139" />
 
 https://www.mermaidchart.com/app/projects/3ef5fbc9-d121-4228-b1bf-82af5f20bbe4/diagrams/06a92a0b-8a97-4d9e-bf72-0132117f316a/version/v0.1/edit
 
